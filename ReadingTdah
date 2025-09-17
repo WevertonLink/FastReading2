@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BionicRead - Leitura Biônica para TDAH</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #7c3aed;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #fafafa;
+            --card-bg: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        .dark-theme {
+            --primary: #3b82f6;
+            --primary-dark: #1e40af;
+            --secondary: #8b5cf6;
+            --text: #e5e7eb;
+            --text-light: #9ca3af;
+            --bg: #111827;
+            --card-bg: #1f2937;
+            --border: #374151;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 16px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 16px;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--primary);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background-color: var(--card-bg);
+            color: var(--text);
+            font-size: 16px;
+            resize: vertical;
+            margin-bottom: 16px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        button {
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--card-bg);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            background-color: var(--card-bg);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .bionic-text {
+            font-size: 18px;
+            line-height: 1.6;
+            padding: 16px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            min-height: 200px;
+            border: 1px solid var(--border);
+        }
+
+        .bionic-bold {
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--card-bg);
+            padding: 16px;
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid var(--border);
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 12px;
+        }
+
+        .control-icon {
+            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border: none;
+            font-size: 20px;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background-color: var(--border);
+            border-radius: 2px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🧠</div>
+                <h1>BionicRead</h1>
+            </div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
+        </div>
+    </header>
+
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+
+    <div class="container">
+        <div class="card">
+            <h2>Seu Texto</h2>
+            <textarea id="inputText" placeholder="Digite ou cole seu texto aqui..."></textarea>
+            
+            <div class="buttons">
+                <button class="btn-secondary" onclick="loadSampleText()">
+                    <span>📄</span> Exemplo
+                </button>
+                <button class="btn-primary" onclick="convertText()">
+                    <span>🚀</span> Converter
+                </button>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="wordCount">0</div>
+                    <div class="stat-label">Palavras</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="charCount">0</div>
+                    <div class="stat-label">Caracteres</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="timeCount">0</div>
+                    <div class="stat-label">Minutos</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Leitura Biônica</h2>
+            <div class="bionic-text" id="bionicText">
+                <p style="text-align: center; color: var(--text-light); padding: 40px 0;">
+                    Seu texto convertido aparecerá aqui...
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="control-btn" onclick="toggleSettings()">
+            <div class="control-icon">⚙️</div>
+            <span>Configurações</span>
+        </button>
+        <button class="control-btn" onclick="startReading()">
+            <div class="control-icon">▶️</div>
+            <span>Ler</span>
+        </button>
+        <button class="control-btn" onclick="pauseReading()">
+            <div class="control-icon">⏸️</div>
+            <span>Pausar</span>
+        </button>
+        <button class="control-btn" onclick="shareText()">
+            <div class="control-icon">📤</div>
+            <span>Compartilhar</span>
+        </button>
+    </div>
+
+    <script>
+        // Estado do aplicativo
+        const state = {
+            darkMode: false,
+            reading: false,
+            text: "",
+            convertedText: ""
+        };
+
+        // Elementos DOM
+        const elements = {
+            inputText: document.getElementById('inputText'),
+            bionicText: document.getElementById('bionicText'),
+            wordCount: document.getElementById('wordCount'),
+            charCount: document.getElementById('charCount'),
+            timeCount: document.getElementById('timeCount'),
+            progressBar: document.getElementById('progressBar'),
+            themeToggle: document.querySelector('.theme-toggle')
+        };
+
+        // Inicialização
+        function init() {
+            loadFromStorage();
+            elements.inputText.addEventListener('input', updateStats);
+            updateStats();
+        }
+
+        // Carregar dados salvos
+        function loadFromStorage() {
+            const savedText = localStorage.getItem('bionicText');
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            
+            if (savedText) {
+                elements.inputText.value = savedText;
+                updateStats();
+            }
+            
+            if (darkMode) {
+                toggleTheme();
+            }
+        }
+
+        // Atualizar estatísticas
+        function updateStats() {
+            const text = elements.inputText.value;
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            const characters = text.length;
+            const readingTime = Math.ceil(words / 200);
+            
+            elements.wordCount.textContent = words;
+            elements.charCount.textContent = characters;
+            elements.timeCount.textContent = readingTime;
+            
+            // Salvar texto
+            localStorage.setItem('bionicText', text);
+            state.text = text;
+        }
+
+        // Converter texto para formato biônico
+        function convertText() {
+            const text = elements.inputText.value.trim();
+            
+            if (!text) {
+                alert("Por favor, digite algum texto para converter.");
+                return;
+            }
+            
+            // Simular processamento
+            elements.bionicText.innerHTML = "<p style='text-align: center; padding: 40px 0;'>Convertendo...</p>";
+            
+            setTimeout(() => {
+                const words = text.split(/\s+/);
+                let convertedHTML = "";
+                
+                for (const word of words) {
+                    if (word.length <= 2) {
+                        convertedHTML += `<span class="bionic-bold">${word}</span> `;
+                    } else {
+                        const boldLength = Math.ceil(word.length * 0.4);
+                        convertedHTML += `<span class="bionic-bold">${word.substring(0, boldLength)}</span>${word.substring(boldLength)} `;
+                    }
+                }
+                
+                elements.bionicText.innerHTML = convertedHTML;
+                state.convertedText = convertedHTML;
+                
+                // Iniciar com 0% de progresso
+                elements.progressBar.style.width = "0%";
+            }, 800);
+        }
+
+        // Carregar texto de exemplo
+        function loadSampleText() {
+            const sampleText = "A leitura biônica é uma técnica revolucionária que pode transformar a experiência de leitura para pessoas com TDAH. Esta abordagem inovadora destaca partes específicas das palavras, criando pontos de ancoragem visual que facilitam o processamento do texto pelo cérebro.";
+            elements.inputText.value = sampleText;
+            updateStats();
+            convertText();
+        }
+
+        // Alternar tema claro/escuro
+        function toggleTheme() {
+            state.darkMode = !state.darkMode;
+            document.body.classList.toggle('dark-theme');
+            elements.themeToggle.textContent = state.darkMode ? "☀️" : "🌙";
+            localStorage.setItem('darkMode', state.darkMode);
+        }
+
+        // Controles de leitura
+        function startReading() {
+            if (!state.convertedText) {
+                alert("Converta um texto primeiro!");
+                return;
+            }
+            
+            state.reading = true;
+            simulateReading();
+        }
+
+        function pauseReading() {
+            state.reading = false;
+        }
+
+        function simulateReading() {
+            if (!state.reading) return;
+            
+            let progress = parseInt(elements.progressBar.style.width) || 0;
+            
+            if (progress < 100) {
+                progress += 2;
+                elements.progressBar.style.width = progress + "%";
+                setTimeout(simulateReading, 100);
+            } else {
+                state.reading = false;
+            }
+        }
+
+        // Compartilhar texto
+        function shareText() {
+            if (!state.convertedText) {
+                alert("Nenhum texto para compartilhar!");
+                return;
+            }
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Texto Biônico',
+                    text: state.text,
+                    url: window.location.href
+                })
+                .catch(error => {
+                    alert("Erro ao compartilhar: " + error);
+                });
+            } else {
+                alert("Seu navegador não suporta a API de compartilhamento. Você pode copiar o texto manualmente.");
+            }
+        }
+
+        // Alternar configurações
+        function toggleSettings() {
+            alert("Configurações serão implementadas em uma versão futura!");
+        }
+
+        // Inicializar o aplicativo
+        init();
+    </script>
+</body>
+</html>
